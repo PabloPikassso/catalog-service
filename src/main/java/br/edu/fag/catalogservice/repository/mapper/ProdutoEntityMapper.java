@@ -14,6 +14,7 @@ public class ProdutoEntityMapper {
         entity.setDescricao(produto.getDescricao());
         entity.setPreco(produto.getPreco());
         entity.setCriadoEm(produto.getCriadoEm());
+        entity.setActive(produto.getActive());
 
         return entity;
     }
@@ -27,6 +28,7 @@ public class ProdutoEntityMapper {
         produto.setDescricao(entity.getDescricao());
         produto.setPreco(entity.getPreco());
         produto.setCriadoEm(entity.getCriadoEm());
+        produto.setActive(entity.getActive());
 
         return produto;
     }

@@ -4,6 +4,7 @@ import br.edu.fag.catalogservice.repository.entity.ProdutoEntity;
 import br.edu.fag.catalogservice.repository.mapper.ProdutoEntityMapper;
 import br.edu.fag.catalogservice.service.domain.ProdutoDomain;
 import org.springframework.stereotype.Repository;
+import br.edu.fag.catalogservice.service.exception.ProductNotFoundException;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class ProdutoRepository implements IRepositorio {
     @Override
     public ProdutoDomain buscarPorId(Long id) {
         ProdutoEntity entity = produtoRepositoryJpa.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                .orElseThrow(() -> new ProductNotFoundException(id));
         return ProdutoEntityMapper.toDomain(entity);
     }
 

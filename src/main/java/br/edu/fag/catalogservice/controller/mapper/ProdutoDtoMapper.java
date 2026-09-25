@@ -26,6 +26,7 @@ public class ProdutoDtoMapper {
         dto.setDescricao(produto.getDescricao());
         dto.setPreco(produto.getPreco());
         dto.setCriadoEm(produto.getCriadoEm());
+        dto.setActive(produto.getActive()); // Linha adicionada para mapear o status
 
         return dto;
     }

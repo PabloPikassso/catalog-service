@@ -9,6 +9,7 @@ public class ProdutoResponseDTO {
     private String descricao;
     private Double preco;
     private LocalDateTime criadoEm;
+    private Boolean active;
 
     public Long getId() {
         return id;
@@ -48,5 +49,13 @@ public class ProdutoResponseDTO {
 
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

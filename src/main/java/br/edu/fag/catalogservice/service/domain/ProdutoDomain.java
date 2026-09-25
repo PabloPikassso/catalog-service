@@ -6,6 +6,7 @@ public class ProdutoDomain {
 
     private static final double PRECO_DE_PRODUTO_DE_ALTO_VALOR = 1000.00;
 
+    private Boolean active;
     private Long id;
     private String nome;
     private String descricao;
@@ -88,5 +89,13 @@ public class ProdutoDomain {
 
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

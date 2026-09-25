@@ -12,10 +12,9 @@ public class ProdutoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Boolean active;
     private String nome;
-
     private String descricao;
-
     private Double preco;
 
     @Column(name = "criado_em")
@@ -59,5 +58,13 @@ public class ProdutoEntity {
 
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

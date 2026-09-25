@@ -5,8 +5,10 @@ import br.edu.fag.catalogservice.repository.mapper.ProdutoEntityMapper;
 import br.edu.fag.catalogservice.service.domain.ProdutoDomain;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public class ProdutoRepository implements  IRepositorio{
+public class ProdutoRepository implements IRepositorio {
 
     private final ProdutoRepositoryJpa produtoRepositoryJpa;
 
@@ -14,14 +16,31 @@ public class ProdutoRepository implements  IRepositorio{
         this.produtoRepositoryJpa = produtoRepositoryJpa;
     }
 
+    @Override
     public ProdutoDomain criar(ProdutoDomain produto) {
+        ProdutoEntity entity = ProdutoEntityMapper.toEntity(produto);
+        ProdutoEntity salvo = produtoRepositoryJpa.save(entity);
+        return ProdutoEntityMapper.toDomain(salvo);
+    }
 
-        ProdutoEntity entity =
-                ProdutoEntityMapper.toEntity(produto);
+    @Override
+    public ProdutoDomain buscarPorId(Long id) {
+        ProdutoEntity entity = produtoRepositoryJpa.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+        return ProdutoEntityMapper.toDomain(entity);
+    }
 
-        ProdutoEntity produtoSalvo =
-                produtoRepositoryJpa.save(entity);
+    @Override
+    public List<ProdutoDomain> buscarAtivos() {
+        return produtoRepositoryJpa.findByActiveTrue().stream()
+                .map(ProdutoEntityMapper::toDomain)
+                .toList();
+    }
 
-        return ProdutoEntityMapper.toDomain(produtoSalvo);
+    @Override
+    public ProdutoDomain atualizar(ProdutoDomain produto) {
+        ProdutoEntity entity = ProdutoEntityMapper.toEntity(produto);
+        ProdutoEntity salvo = produtoRepositoryJpa.save(entity);
+        return ProdutoEntityMapper.toDomain(salvo);
     }
 }

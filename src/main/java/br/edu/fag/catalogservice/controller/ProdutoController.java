@@ -5,18 +5,15 @@ import br.edu.fag.catalogservice.controller.dto.ProdutoResponseDTO;
 import br.edu.fag.catalogservice.controller.mapper.ProdutoDtoMapper;
 import br.edu.fag.catalogservice.service.ProdutoService;
 import br.edu.fag.catalogservice.service.domain.ProdutoDomain;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/produtos")
+@RequestMapping("/products")
 public class ProdutoController {
 
     private final ProdutoService produtoService;
@@ -27,36 +24,32 @@ public class ProdutoController {
 
     @PostMapping
     public ResponseEntity<?> criar(@RequestBody ProdutoRequestDTO dados) {
-
         ProdutoDomain produto = ProdutoDtoMapper.toDomain(dados);
-
-        // Validações básicas da entrada
-        if (produto.getNome() == null || produto.getNome().isBlank()) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("erro", "O nome do produto é obrigatório."));
-        }
-
-        if (produto.getPreco() == null) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("erro", "O preço do produto deve ser um número válido."));
-        }
-
         try {
-
             ProdutoDomain produtoCriado = produtoService.criar(produto);
-
-            ProdutoResponseDTO resposta =
-                    ProdutoDtoMapper.toResponseDto(produtoCriado);
-
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(resposta);
-
+            return ResponseEntity.status(HttpStatus.CREATED).body(ProdutoDtoMapper.toResponseDto(produtoCriado));
         } catch (IllegalArgumentException excecao) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(Map.of("erro", excecao.getMessage()));
+            return ResponseEntity.badRequest().body(Map.of("erro", excecao.getMessage()));
         }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProdutoResponseDTO> consultarPorId(@PathVariable Long id) {
+        ProdutoDomain produto = produtoService.buscarPorId(id);
+        return ResponseEntity.ok(ProdutoDtoMapper.toResponseDto(produto));
+    }
+
+    @GetMapping(params = "active=true")
+    public ResponseEntity<List<ProdutoResponseDTO>> consultarAtivos() {
+        List<ProdutoResponseDTO> ativos = produtoService.buscarAtivos().stream()
+                .map(ProdutoDtoMapper::toResponseDto)
+                .toList();
+        return ResponseEntity.ok(ativos);
+    }
+
+    @PatchMapping("/{id}/deactivate")
+    public ResponseEntity<ProdutoResponseDTO> desativar(@PathVariable Long id) {
+        ProdutoDomain atualizado = produtoService.desativar(id);
+        return ResponseEntity.ok(ProdutoDtoMapper.toResponseDto(atualizado));
     }
 }
